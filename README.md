@@ -28,11 +28,12 @@ Usage
 
 Testing
 -------
-
+	
+	Download "jsonplus.zip" for testing purpose.
 	Open "index.html" in Your browser.
 
 
 More Info
 ---------
 
-[1]: http://jsonplus.com/
+[JsonPlus.com](http://jsonplus.com/)
