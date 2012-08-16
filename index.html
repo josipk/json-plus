@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>JSON PLUS</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+	<meta http-equiv="EXPIRES" content="-1">
+	<meta name="ROBOTS" content="NONE">
+	<script type="text/javascript" src="jsonplus.js"></script>
+	<style>
+		body,p { font-size:12px; padding:0; margin:10px;  font-family:Tahoma; text-style:none; }
+	</style>
+	
+  </head>
+  <body>
+  <h1>Json Plus<h1>
+  
+  <p><strong>Example with Json plus source</strong></p> 
+  
+  <p>
+   * json+ structure is same as json data except it allowed functions as object type.<br>
+   * This give as java script object literal without variable declaration to be more precise.<br>
+  </p>
+  
+  <p id="sourceapp2"></p>
+  
+  
+  <p id="sourceapp3"></p>
+  
+  
+  
+      <script type="text/javascript">
+
+			// get json plus object from file and declare as "obj" variable
+			var obj = jsonPlus.get('source.json');
+
+			// new literal object
+			var nobj = {
+						"title":"Title2",
+						"call3":{
+							"tt":"234",
+							"tz":"zu3"
+						},
+						"newfunc": function(a) {
+							document.getElementById("sourceapp3").innerHTML = a;
+						}
+					};
+			
+			// exend "obj" with "nobj"
+			var app2 = jsonPlus.extend(obj, nobj);
+			
+			// call function t1() 
+			app2.newobj.t1(7, 3);
+			
+			// call function complicated()
+			app2.newfunc("test function");
+
+			//stringify java script literal object 	"app2" into json plus source
+			var objectStr1 = jsonPlus.stringify(app2); 
+			document.getElementById("sourceapp2").innerHTML = "<pre>" + objectStr1 +"</pre>";
+	
+    </script>
+  </body>
+  
+  </html>

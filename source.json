@@ -1,0 +1,26 @@
+{
+"title":"Test",
+"call":function(a){
+	alert("5");
+},
+"end":[3,4,5],
+"call2":function(a){
+	if(a == 4) {
+		alert("4");	
+	} else {
+		alert(a);
+	}
+	var newObj = [{"a":"5"},{"b":"c"}];
+},
+"newobj":{
+	"t1":function(b,c) { alert(b+c); },
+	"t3":"t4"
+},
+"complicated" : function() {
+	
+	var p = function(c) { alert(c); };
+
+	p(2);
+	
+}
+}
