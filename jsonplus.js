@@ -29,7 +29,7 @@ var jsonPlus = {
   options: {
 	mode: 'parse'	// "parse", "eval"
   },
-  isfuncDesc: new RegExp('^(( *)function( *)\((.*)\)( *))$'),
+  isfuncDesc: new RegExp('^(( *)function( *)\((.*)\)( *))|(( *)regex( *))$'),
   isfuncAnonymous: new RegExp('^(( *)function( *)anonymous\((.*)\)( *))'),
   number: '(?:-?\\b(?:0|[1-9][0-9]*)(?:\\.[0-9]+)?(?:[eE][+-]?[0-9]+)?\\b)',
   oneChar: '(?:[^\\0-\\x08\\x0a-\\x1f\"\\\\]|\\\\(?:[\"/\\\\bfnrt]|u[0-9A-Fa-f]{4}))',
@@ -51,6 +51,11 @@ var jsonPlus = {
 				}
 			}
 		return str;
+  },
+  getType : function(e) {
+    // should detect more than simply object, can detect RegExp too
+    // put into lowercase to ensure compatibility with existing code
+    return Object.prototype.toString.call(e).split(/\W/)[2].toLowerCase();
   },
 
 	get : function(source, opt) {
@@ -235,7 +240,7 @@ var jsonPlus = {
 				} else {
 					temp = "\"" + i + "\":";
 				}
-				switch (typeof sourceobj[i]) {
+				switch (this.getType(sourceobj[i])) {
 					case "object":
 						if (sourceobj[i] instanceof Array) {
 							temp += this.stringify(sourceobj[i], true);
@@ -243,9 +248,13 @@ var jsonPlus = {
 							temp += this.stringify(sourceobj[i], false);
 						}
 						break;
-					case "function":
-						temp += this.cleanFunction(sourceobj[i].toString());
-						break;
+          case "regexp":
+            var parts = sourceobj[i].toString().match(/^\/(.+)\/(\w*)$/);
+            temp += 'regex{"'+parts[1]+'","'+parts[2]+'"}';
+            break;
+          case "function":
+            temp += this.cleanFunction(sourceobj[i].toString());
+            break;
 					case "string":
 						temp += "\"" + sourceobj[i] + "\"";  
 						break;
@@ -276,7 +285,7 @@ var jsonPlus = {
 				obj1[key] = {};
     		}
 		
-			switch (typeof obj2[key]) {
+			switch (this.getType(sourceobj[i])) {
 			case "object":
 					if (obj2[key] instanceof Array) {
 						obj1[key] = obj2[key];
@@ -294,12 +303,17 @@ var jsonPlus = {
     return  obj1;	
 
 	},
-	createFunction : function (str) {
-		var params = str.match(/\((.*?)\)/);
-		var functionbody = str.match(/{[^{]+({[^{}]+?}[^{]+)*[^}]+}/);
-		var body = functionbody[0].substr(1, functionbody[0].length-2);
-		return new Function(params[0].substr(1, params[0].length-2), body);
-	},
+  createFunction : function (str) {
+    var params = str.match(/\((.*?)\)/);
+    var functionbody = str.match(/{[^{]+({[^{}]+?}[^{]+)*[^}]+}/);
+    var body = functionbody[0].substr(1, functionbody[0].length-2);
+    return new Function(params[0].substr(1, params[0].length-2), body);
+  },
+  createRegex : function (str) {
+    var parts = str.match(/^regex{\"(.+?)\",\"(\w*)\"}$/)
+    
+    return new RegExp(parts[1],parts[2]);
+  },
 	
 	cleanFunction : function(fstr) {
 	
@@ -360,7 +374,12 @@ var jsonPlus = {
           break;
 		case 95: // '_'
 		  cont = stack[0];
-		  cont[key || cont.length] = this.createFunction(funcContainer[tok]);
+      if(funcContainer[tok].match(/^function/)){
+		    cont[key || cont.length] = this.createFunction(funcContainer[tok]);
+      } else if(funcContainer[tok].match(/^regex/)){
+        cont[key || cont.length] = this.createRegex(funcContainer[tok]);
+      }
+      
 		  key = void 0;		 
 		 break;	
         case 0x5b:  // '['
