@@ -31,7 +31,16 @@
       <script type="text/javascript">
 
 			// get json plus object from file and declare as "obj" variable
-			var obj = jsonPlus.get('source.json');
+			//var obj = jsonPlus.get('source.json');
+
+
+			var obj2 = jsonPlus.parse('{"title": "JSONplus",' +
+						  '"foo": function (a, b){ alert(a + b); },' +
+						  '"array": [1,2,3,4,5], "boolean":true }');
+			
+			//console.dir(obj2);
+
+			obj2.foo(7, 3);	
 
 			// new literal object
 			var nobj = {
@@ -46,10 +55,10 @@
 					};
 			
 			// exend "obj" with "nobj"
-			var app2 = jsonPlus.extend(obj, nobj);
+			var app2 = jsonPlus.extend(obj2, nobj);
 			
-			// call function t1() 
-			app2.newobj.t1(7, 3);
+				// call function t1() 
+			console.dir(app2);
 			
 			// call function complicated()
 			app2.newfunc("test function");

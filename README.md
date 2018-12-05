@@ -1,9 +1,9 @@
 JSON Plus
 =============
 
-JSONplus is regular JSON data format extended with functions as data type. 
+JSONplus is extended JSON data format, extended with functions and regex. 
 Such format is in fact JavaScript Object Literal without variable declaration.
-Function as a data type in JSON format is not approved by "json.org"!
+(Function as a data type in JSON format is not approved by "json.org")
 
 
 Usage
@@ -15,25 +15,19 @@ Usage
 				
 	or You can simply parse JSONplus string source:
 
-            var obj = jsonPlus.parse(
-					'{"title": "JSONplus",
-                    "foo": function (a, b){ 
-                               alert(a + b); 
-                           },
-                    "array": [1,2,3,4,5]
-                    "boolean":true}'
-				);
+	var obj = jsonPlus.parse('{"title": "JSONplus",' +
+				 '"foo": function (a, b){ alert(a + b); },' +
+				 '"array": [1,2,3,4,5], "boolean":true }');
 				
 
 
 Testing
 -------
-	
-	Download "jsonplus.zip" for testing purpose.
-	Open "index.html" in Your browser.
+
+	"index.html" loads jsonplus from "source.json".
+	"index_parse_extend.html" parse jsonplus string demo.
 
 
-More Info
+Info
 ---------
-
-[JsonPlus.com](http://jsonplus.com/)
+josip.kalebic[at]gmail.com
